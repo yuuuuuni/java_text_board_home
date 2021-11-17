@@ -15,12 +15,11 @@ public class Main {
     while(true) {
       System.out.printf("명령) ");
       str = sc.nextLine();
+      System.out.println("입력된 명령어 : " + str);
 
       if(str.equals("exit")) {
         break;
       }
-
-      System.out.println("입력된 명령어 : " + str);
 
     }
 
