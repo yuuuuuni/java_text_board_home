@@ -1,5 +1,6 @@
 package com.pyh.exam.board;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -17,6 +18,15 @@ public class Main {
     // 왜? 이때 기준으로 아직 게시물을 만들기 전이고 아래에서 게시물을 만들때 그제서야 값이 들어갈테니까
     Article lastArticle = null;
 
+    ArrayList<Article> articles = new ArrayList<Article>();
+
+    // 테스트 데이터 3개 등록, 시작
+    articles.add(new Article(1, "제목1", "내용1"));
+    articles.add(new Article(2, "제목2", "내용2"));
+    articles.add(new Article(3, "제목3", "내용3"));
+    // 테스트 데이터 3개 등록, 끝
+
+
 
     while (true) {
 
@@ -26,6 +36,19 @@ public class Main {
       if (cmd.equals("exit")) {  // 프로그램 종료
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
       }
+      else if(cmd.equals("/usr/article/list")) {
+
+        System.out.println("- 게시물 리스트 -");
+        System.out.println("--------------------");
+        System.out.println("번호 / 제목");
+        System.out.println("--------------------");
+
+        //for each문 사용해서 배열리스트 안에 있는 테스트 데이터들 3개 다 뽑기
+        for(Article article : articles) {
+          System.out.println(article.id + " / " + article.title);
+        }
+
+      }
       else if(cmd.equals("/usr/article/detail")) {  // 게시물 상세보기 
 
         if(lastArticle == null) {
@@ -33,8 +56,8 @@ public class Main {
           continue;  // 즉시 아래 남아있는 반복문 다 스킵하고 바로 다시 처음으로 돌아감
         }
 
-        // 1. article.id, article.title, article.body을 받기 위해 먼저 null설정
-        // 2. null에서 lastArticle로 값을 나중에 바꿔주는데 왜 바꿔주는지 모르겠음....
+        // 1. article.id, article.title, article.body을 받기 위해(오류 안나게 하기 위해 설정)
+        // 2. null에서 lastArticle로 값을 바꿔주는건 그냥 간결하게 하기 위해 변수 하나 정해서 넣은거임 그냥 lastArticle.~~라고 써도 상관없음
         Article article = lastArticle;  // null -> lastArticle
 
         System.out.println("- 게시물 상세내용 -");
