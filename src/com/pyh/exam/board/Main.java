@@ -5,6 +5,12 @@ import java.util.Scanner;
 
 public class Main {
 
+  static void makeTestData(ArrayList<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
+    articles.add(new Article(1, "제목1", "내용1"));
+    articles.add(new Article(2, "제목2", "내용2"));
+    articles.add(new Article(3, "제목3", "내용3"));
+  }
+
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
 
@@ -20,11 +26,7 @@ public class Main {
 
     ArrayList<Article> articles = new ArrayList<Article>();
 
-    // 테스트 데이터 3개 등록, 시작
-    articles.add(new Article(1, "제목1", "내용1"));
-    articles.add(new Article(2, "제목2", "내용2"));
-    articles.add(new Article(3, "제목3", "내용3"));
-    // 테스트 데이터 3개 등록, 끝
+    makeTestData(articles);
 
 
 
