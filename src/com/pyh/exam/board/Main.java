@@ -1,11 +1,12 @@
 package com.pyh.exam.board;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-  static void makeTestData(ArrayList<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
+  static void makeTestData(List<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
     articles.add(new Article(1, "제목1", "내용1"));
     articles.add(new Article(2, "제목2", "내용2"));
     articles.add(new Article(3, "제목3", "내용3"));
@@ -19,11 +20,7 @@ public class Main {
     System.out.println("== 프로그램 시작 ==");
 
     int articlesLastId = 0;  // article의 마지막 게시물 번호라는 의미의 변수임. 맨 처음에는 아직 게시물이 없을 때이므로 게시물 번호를 0으로 초기화
-
-
-
-
-    ArrayList<Article> articles = new ArrayList<Article>();
+    List<Article> articles = new ArrayList<>();
 
     makeTestData(articles);
 
