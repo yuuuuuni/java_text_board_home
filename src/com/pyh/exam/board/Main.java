@@ -97,6 +97,7 @@ public class Main {
         // 그래야 article도 살아있는 상태에서 값을 넘겨줄 수 있기 때문
         // 그러므로 입력받은 값(정보)들은 이때부터는 article이 아닌 lastArticle에 다 저장되게 됨.
         lastArticle = article;
+        articles.add(article);
 
         System.out.println("생성된 게시물 객체 : " + article);
 
