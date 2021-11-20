@@ -28,6 +28,10 @@ public class Main {
 
     makeTestData(articles);
 
+    if(articles.size() > 0) {
+      articlesLastId = articles.get(articles.size() - 1).id;
+    }
+
 
 
     while (true) {
