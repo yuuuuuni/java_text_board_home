@@ -45,8 +45,9 @@ public class Main {
         System.out.println("번호 / 제목");
         System.out.println("--------------------");
 
-        //for each문 사용해서 배열리스트 안에 있는 테스트 데이터들 3개 다 뽑기
-        for(Article article : articles) {
+        //최근 게시물 부터 뽑아와야 하므로 역순으로 for문 돌리기
+        for(int i = articles.size()-1; i >= 0; i--) {
+          Article article = articles.get(i);
           System.out.println(article.id + " / " + article.title);
         }
 
