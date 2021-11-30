@@ -54,8 +54,20 @@ public class Main {
 
       }
       else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
+        if(params.containsKey("id") == false) { // containsKey란? params에 id 있냐고 물어보는 것
+          System.out.println("id를 입력해주세요.");
+          continue;
+        }
 
-        int id = Integer.parseInt(params.get("id"));
+        int id = 0;
+
+        try {
+          id = Integer.parseInt(params.get("id"));
+        }
+        catch(NumberFormatException e) {
+          System.out.println("id를 정수형태로 입력해주세요.");
+          continue;
+        }
 
 
         if(id > articles.size()) {
