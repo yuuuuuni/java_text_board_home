@@ -1,8 +1,6 @@
 package com.pyh.exam.board;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -35,10 +33,12 @@ public class Main {
       System.out.printf("명령) ");
       String cmd = sc.nextLine();
 
-      if (cmd.equals("exit")) {  // 프로그램 종료
+      Rq rq = new Rq(cmd);
+
+      if (rq.getUrlPath().equals("exit")) {  // 프로그램 종료
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
       }
-      else if(cmd.equals("/usr/article/list")) {
+      else if(rq.getUrlPath().equals("/usr/article/list")) {
 
         System.out.println("- 게시물 리스트 -");
         System.out.println("--------------------");
@@ -52,7 +52,7 @@ public class Main {
         }
 
       }
-      else if(cmd.equals("/usr/article/detail")) {  // 게시물 상세보기 
+      else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
 
         if(articles.isEmpty()) {
           System.out.println("게시물이 존재하지 않습니다.");
@@ -69,7 +69,7 @@ public class Main {
         System.out.println("내용 : "+ article.body);
 
       }
-      else if (cmd.equals("/usr/article/write")) {  // 게시물 등록
+      else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
         System.out.println("- 게시물 등록 -");
         System.out.printf("제목 : ");
         String title = sc.nextLine();
@@ -124,5 +124,60 @@ class Article {  // 클래스 생성
   @Override  // toString() 메서드로 오버라이드 하여 아래의 양식으로 return 해줌
   public String toString() {
     return String.format("{id : %d, title : \"%s\", body : \"%s\"}", id, title, body);
+  }
+}
+
+
+class Rq {
+  private String url;
+  private String urlPath;
+  private Map<String, String> params;
+
+  // 필드추가가능
+
+  // 수정가능
+  Rq(String url) {
+    this.url = url;
+    urlPath = Util.getUrlPathFromUrl(url);
+    params = Util.getParamsFromUrl(url);
+  }
+
+  // 수정가능, if문 금지
+  public Map<String, String> getParams() {
+    return params;
+  }
+
+  // 수정가능, if문 금지
+  public String getUrlPath() {
+    return urlPath;
+  }
+}
+
+// 수정불가능
+class Util {
+  static Map<String, String> getParamsFromUrl(String url) {
+
+    Map<String, String> params = new HashMap<>();
+    String[] urlBits = url.split("\\?", 2);
+
+    if (urlBits.length == 1) {
+      return params;
+    }
+
+    String queryStr = urlBits[1];
+    for (String bit : queryStr.split("&")) {
+      String[] bits = bit.split("=", 2);
+      if (bits.length == 1) {
+        continue;
+      }
+      params.put(bits[0], bits[1]);
+    }
+
+    return params;
+  }
+
+  static String getUrlPathFromUrl(String url) {
+
+    return url.split("\\?", 2)[0];
   }
 }
