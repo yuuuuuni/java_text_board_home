@@ -34,6 +34,7 @@ public class Main {
       String cmd = sc.nextLine();
 
       Rq rq = new Rq(cmd);
+      Map<String, String> params = rq.getParams();
 
       if (rq.getUrlPath().equals("exit")) {  // 프로그램 종료
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
@@ -54,14 +55,16 @@ public class Main {
       }
       else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
 
-        if(articles.isEmpty()) {
+        int id = Integer.parseInt(params.get("id"));
+
+
+        if(id > articles.size()) {
           System.out.println("게시물이 존재하지 않습니다.");
           continue;  // 즉시 아래 남아있는 반복문 다 스킵하고 바로 다시 처음으로 돌아감
         }
 
-        // 1. article.id, article.title, article.body을 받기 위해(오류 안나게 하기 위해 설정)
-        // 2. null에서 lastArticle로 값을 바꿔주는건 그냥 간결하게 하기 위해 변수 하나 정해서 넣은거임 그냥 lastArticle.~~라고 써도 상관없음
-        Article article = articles.get(articles.size() - 1);  // null -> lastArticle
+
+        Article article = articles.get(id - 1);
 
         System.out.println("- 게시물 상세내용 -");
         System.out.println("번호 : "+ article.id);
@@ -69,6 +72,7 @@ public class Main {
         System.out.println("내용 : "+ article.body);
 
       }
+
       else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
         System.out.println("- 게시물 등록 -");
         System.out.printf("제목 : ");
