@@ -5,9 +5,12 @@ import java.util.*;
 public class Main {
 
   static void makeTestData(List<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
-    articles.add(new Article(1, "제목1", "내용1"));
-    articles.add(new Article(2, "제목2", "내용2"));
-    articles.add(new Article(3, "제목3", "내용3"));
+     articles.add(new Article(1, "제목1", "내용1"));
+     articles.add(new Article(2, "제목2", "내용2"));
+     articles.add(new Article(3, "제목3", "내용3"));
+     articles.add(new Article(4, "제목4", "내용4"));
+     articles.add(new Article(5, "제목5", "내용5"));
+
   }
 
   public static void main(String[] args) {
@@ -36,6 +39,7 @@ public class Main {
       Rq rq = new Rq(cmd);
       Map<String, String> params = rq.getParams();
 
+
       if (rq.getUrlPath().equals("exit")) {  // 프로그램 종료
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
       }
@@ -46,37 +50,61 @@ public class Main {
         System.out.println("번호 / 제목");
         System.out.println("--------------------");
 
-        //최근 게시물 부터 뽑아와야 하므로 역순으로 for문 돌리기
-        for(int i = articles.size()-1; i >= 0; i--) {
-          Article article = articles.get(i);
-          System.out.println(article.id + " / " + article.title);
+        // boolean형 변수를 만들어 현재는 내림차순으로 정렬되어있으므로 orderByIdDesc = true라고 값을 놓기.
+        boolean orderByIdDesc = true;
+        // params가 orderBy 키를 포함하고, 그 orderBy 키 값이 idAsc이면 if문 실행
+        // orderBy 키 값이 idAsc라고 걸어놨는데, 만약 고객이 usr/article/list 까지만 쓰면, orderBy 값이 null이 되므로 오류 남
+        // 따라서, 앞에 orderBy 키를 포함한다는 전제를 깔아줘야함
+        // 아래의 if문은 &&이므로 params가 orderBy 값을 포함하지 않으면 바로 끝나버림 오른쪽으로 넘어가지도 않음
+        if(params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
+          // Collections.reverse(articles); // 이건 원본이 훼손됨 원본 자체를 뒤집은 것
+          orderByIdDesc = false; // 만약, 키 값이 idAsc가 된다면 반대가 되므로 orderByIdDesc를 false로 놔줌
+        }
+
+        if(orderByIdDesc) { // orderByIdDesc = true인 경우 if문 실행(내림차순이므로 현재의 for문 넣어주기)
+          //최근 게시물 부터 뽑아와야 하므로 역순으로 for문 돌리기
+          for(int i = articles.size()-1; i >= 0; i--) {
+            Article article = articles.get(i);
+            System.out.println(article.id + " / " + article.title);
+          }
+        }
+        else { // orderByIdDesc = false인 경우, 즉 orderBy=idAsc를 입력받는 경우에는 else문 탐
+          // 이 경우 오름차순으로 for문 돌려줘야 하므로 for each문 사용
+          for(Article article : articles) { // 게시물들에서 하나 꺼내서 article에 하나씩 넣어줌
+            System.out.println(article.id + " / " + article.title);
+          }
+
         }
 
       }
-      else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
-        if(params.containsKey("id") == false) { // containsKey란? params에 id 있냐고 물어보는 것
-          System.out.println("id를 입력해주세요.");
+        else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
+         if(params.containsKey("id") == false) { // containsKey() : params로 들어온 명령어 인자에 id가 있냐?라고 확인하는 함수
+            System.out.println("id를 입력해주세요.");
+            continue; // while문의 첫번째로 다시 올라감
+          }
+
+         int id = 0; // id를 try안에서 만들면 밑에서 id를 쓸 수 없으므로 바깥으로 빼줌
+
+        // try-catch문 사용하면 try안에 감싸진 곳에서 프로그램 오류가 나도 뻗지 않음.
+        // try 안에 감싸진 실행문이 오류가 나지 않으면 catch 실행 되지 않고 그냥 넘어감
+        // try 안에 감싸진 실행문이 오류 날 경우, catch 안에 감싸진 실행문이 실행되고 넘어감
+         try {
+           // ex) 고객이 id=5라고 침, int id = 5가 됨
+           id = Integer.parseInt(params.get("id")); // params의 id 키를 꺼내면 값이 나오는데 그것이 String이므로 정수화 시킴
+         }
+        catch (NumberFormatException e) {
+          System.out.println("id를 정수로 입력해주세요.");
           continue;
         }
-
-        int id = 0;
-
-        try {
-          id = Integer.parseInt(params.get("id"));
-        }
-        catch(NumberFormatException e) {
-          System.out.println("id를 정수형태로 입력해주세요.");
-          continue;
-        }
-
 
         if(id > articles.size()) {
           System.out.println("게시물이 존재하지 않습니다.");
-          continue;  // 즉시 아래 남아있는 반복문 다 스킵하고 바로 다시 처음으로 돌아감
+          continue; // while문의 첫번째로 다시 올라감
         }
-
-
-        Article article = articles.get(id - 1);
+        
+        // params의 번호와 articles의 번호를 비교하는거 없이 한번에 id값을 넣어서 처리
+        // 5-1은 4, get(4)는 articles의 번호 5에 해당되므로 5번 게시물이 나옴
+        Article article = articles.get(id - 1); // articles가 0번째 인덱스에서 시작하므로 id값에서 하나 빼야함
 
         System.out.println("- 게시물 상세내용 -");
         System.out.println("번호 : "+ article.id);
@@ -99,6 +127,7 @@ public class Main {
         // Article이라는 객체를 생성했으므로 이제 저거는 변수 타입을 Article 이라고 쓸 수 있는것
         // article 요 변수는 else if 이 괄호 안에서 밖에 못씀 괄호 밖으로 나가면 못씀 죽음...
         Article article = new Article(id, title, body);   // Article 객체 생성  // new Article에 들어온 값들은 스캐너로 입력 받은 값들 + 알아서 증가한 번호 변수
+        // 게시물 객체가 생성되는 코드임. 즉, 게시물 생성
 
 
         articles.add(article);
@@ -160,11 +189,13 @@ class Rq {
 
   // 수정가능, if문 금지
   public Map<String, String> getParams() {
+
     return params;
   }
 
   // 수정가능, if문 금지
   public String getUrlPath() {
+
     return urlPath;
   }
 }
