@@ -50,6 +50,10 @@ public class Main {
         System.out.println("번호 / 제목");
         System.out.println("--------------------");
 
+
+        List<Article> sortedArticles = articles; // articles 안에는 오름차순인 게시물들이 존재
+
+
         // boolean형 변수를 만들어 현재는 내림차순으로 정렬되어있으므로 orderByIdDesc = true라고 값을 놓기.
         boolean orderByIdDesc = true;
         // params가 orderBy 키를 포함하고, 그 orderBy 키 값이 idAsc이면 if문 실행
@@ -57,24 +61,17 @@ public class Main {
         // 따라서, 앞에 orderBy 키를 포함한다는 전제를 깔아줘야함
         // 아래의 if문은 &&이므로 params가 orderBy 값을 포함하지 않으면 바로 끝나버림 오른쪽으로 넘어가지도 않음
         if(params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
-          // Collections.reverse(articles); // 이건 원본이 훼손됨 원본 자체를 뒤집은 것
           orderByIdDesc = false; // 만약, 키 값이 idAsc가 된다면 반대가 되므로 orderByIdDesc를 false로 놔줌
         }
 
-        if(orderByIdDesc) { // orderByIdDesc = true인 경우 if문 실행(내림차순이므로 현재의 for문 넣어주기)
-          //최근 게시물 부터 뽑아와야 하므로 역순으로 for문 돌리기
-          for(int i = articles.size()-1; i >= 0; i--) {
-            Article article = articles.get(i);
-            System.out.println(article.id + " / " + article.title);
-          }
+        if(orderByIdDesc) { // orderByIdDesc가 true라고 되어있는데 맞으면, 이는 역순으로 되어있으므로 뒤집어라 라는 뜻 (정순으로 보여줘라)
+          sortedArticles = Util.reverseList(sortedArticles); // 원본을 복사해서 그 복사본을 뒤집어라 -> 오름차순을 내림차순으로 뒤집어라
         }
-        else { // orderByIdDesc = false인 경우, 즉 orderBy=idAsc를 입력받는 경우에는 else문 탐
-          // 이 경우 오름차순으로 for문 돌려줘야 하므로 for each문 사용
-          for(Article article : articles) { // 게시물들에서 하나 꺼내서 article에 하나씩 넣어줌
-            System.out.println(article.id + " / " + article.title);
-          }
 
-        }
+
+          for(Article article : sortedArticles) {
+            System.out.println(article.id + " / " + article.title);
+          }
 
       }
         else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
@@ -202,6 +199,16 @@ class Rq {
 
 // 수정불가능
 class Util {
+  // 이 함수는 원본리스트를 훼손하지 않고, 새 리스트를 만듭니다. 즉 정렬이 반대인 복사본리스트를 만들어서 반환합니다.
+  public static<T> List<T> reverseList(List<T> list) { // 입력받은 값을 복사해서 그 복사본을 뒤집음
+    List<T> reverse = new ArrayList<>(list.size());
+
+    for ( int i = list.size() - 1; i >= 0; i-- ) {
+      reverse.add(list.get(i));
+    }
+    return reverse;
+  }
+
   static Map<String, String> getParamsFromUrl(String url) {
 
     Map<String, String> params = new HashMap<>();
