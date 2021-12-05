@@ -5,11 +5,11 @@ import java.util.*;
 public class Main {
 
   static void makeTestData(List<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
-     articles.add(new Article(1, "제목1", "내용1"));
-     articles.add(new Article(2, "제목2", "내용2"));
-     articles.add(new Article(3, "제목3", "내용3"));
-     articles.add(new Article(4, "제목4", "내용4"));
-     articles.add(new Article(5, "제목5", "내용5"));
+    // for문으로 테스트 게시물 100개 만들기
+    for(int i = 0; i < 100; i++) {
+      int id = i + 1;
+      articles.add(new Article(id, "제목" + id, "내용" + id));
+    }
 
   }
 
