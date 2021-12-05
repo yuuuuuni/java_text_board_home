@@ -44,50 +44,7 @@ public class Main {
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
       }
       else if(rq.getUrlPath().equals("/usr/article/list")) {
-
-        System.out.println("- 게시물 리스트 -");
-        System.out.println("--------------------");
-        System.out.println("번호 / 제목");
-        System.out.println("--------------------");
-
-        // 검색시작
-        List<Article> filteredArticles = articles;
-
-
-        if(params.containsKey("searchKeyword")) {
-          String searchKeyword = params.get("searchKeyword"); // 고객이 "searchKeyword=??"에서 ??으로 친 값을 searchKeyword에 넣어라
-
-          filteredArticles = new ArrayList<>();
-
-          for(Article article : articles) {
-            boolean matched = article.title.contains(searchKeyword) || article.body.contains(searchKeyword);
-            if(matched) { // matched가 맞으면
-              filteredArticles.add(article);
-            }
-          }
-        }
-        // 검색끝
-
-        List<Article> sortedArticles = filteredArticles; // 원래 articles 안에는 오름차순된 게시물들이 존재
-
-
-        boolean orderByIdDesc = true; // orderByIdDesc 라는 변수를 선언하고 true로 놓기
-        // params가 orderBy 키를 포함하고, 그 orderBy 키 값이 idAsc이면 if문 실행
-        // orderBy 키 값이 idAsc라고 걸어놨는데, 만약 고객이 usr/article/list 까지만 쓰면, orderBy 값이 null이 되므로 오류 남
-        // 따라서, 앞에 orderBy 키를 포함한다는 전제를 깔아줘야함
-        // 아래의 if문은 &&이므로 params가 orderBy 값을 포함하지 않으면 바로 끝나버림 오른쪽으로 넘어가지도 않음
-        if(params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
-          orderByIdDesc = false; // 만약, 키 값이 idAsc가 된다면 반대가 되므로 orderByIdDesc를 false로 놔줌
-        }
-
-        if(orderByIdDesc) { // orderByIdDesc가 참이면
-          sortedArticles = Util.reverseList(sortedArticles); // articles의 복사본을 뒤집어라(즉, 오름차순되어있는걸 내림차순으로)
-        }
-
-          for(Article article : sortedArticles) { // 뒤집은 다음 순차적으로 보여줘라
-            System.out.println(article.id + " / " + article.title);
-          }
-
+        actionUsrArticleList(rq, articles);
       }
         else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
          if(params.containsKey("id") == false) { // containsKey() : params로 들어온 명령어 인자에 id가 있냐?라고 확인하는 함수
@@ -161,6 +118,53 @@ public class Main {
     System.out.println("== 프로그램 종료 ==");
 
     sc.close();
+  }
+
+  private static void actionUsrArticleList(Rq rq, List<Article> articles) {
+    System.out.println("- 게시물 리스트 -");
+    System.out.println("--------------------");
+    System.out.println("번호 / 제목");
+    System.out.println("--------------------");
+
+    Map<String, String> params = rq.getParams();
+
+    // 검색시작
+    List<Article> filteredArticles = articles;
+
+
+    if(params.containsKey("searchKeyword")) {
+      String searchKeyword = params.get("searchKeyword"); // 고객이 "searchKeyword=??"에서 ??으로 친 값을 searchKeyword에 넣어라
+
+      filteredArticles = new ArrayList<>();
+
+      for(Article article : articles) {
+        boolean matched = article.title.contains(searchKeyword) || article.body.contains(searchKeyword);
+        if(matched) { // matched가 맞으면
+          filteredArticles.add(article);
+        }
+      }
+    }
+    // 검색끝
+
+    List<Article> sortedArticles = filteredArticles; // 원래 articles 안에는 오름차순된 게시물들이 존재
+
+
+    boolean orderByIdDesc = true; // orderByIdDesc 라는 변수를 선언하고 true로 놓기
+    // params가 orderBy 키를 포함하고, 그 orderBy 키 값이 idAsc이면 if문 실행
+    // orderBy 키 값이 idAsc라고 걸어놨는데, 만약 고객이 usr/article/list 까지만 쓰면, orderBy 값이 null이 되므로 오류 남
+    // 따라서, 앞에 orderBy 키를 포함한다는 전제를 깔아줘야함
+    // 아래의 if문은 &&이므로 params가 orderBy 값을 포함하지 않으면 바로 끝나버림 오른쪽으로 넘어가지도 않음
+    if(params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
+      orderByIdDesc = false; // 만약, 키 값이 idAsc가 된다면 반대가 되므로 orderByIdDesc를 false로 놔줌
+    }
+
+    if(orderByIdDesc) { // orderByIdDesc가 참이면
+      sortedArticles = Util.reverseList(sortedArticles); // articles의 복사본을 뒤집어라(즉, 오름차순되어있는걸 내림차순으로)
+    }
+
+    for(Article article : sortedArticles) { // 뒤집은 다음 순차적으로 보여줘라
+      System.out.println(article.id + " / " + article.title);
+    }
   }
 }
 
