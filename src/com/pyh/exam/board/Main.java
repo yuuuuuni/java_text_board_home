@@ -51,11 +51,10 @@ public class Main {
         System.out.println("--------------------");
 
 
-        List<Article> sortedArticles = articles; // articles 안에는 오름차순인 게시물들이 존재
+        List<Article> sortedArticles = articles; // 원래 articles 안에는 오름차순된 게시물들이 존재
 
 
-        // boolean형 변수를 만들어 현재는 내림차순으로 정렬되어있으므로 orderByIdDesc = true라고 값을 놓기.
-        boolean orderByIdDesc = true;
+        boolean orderByIdDesc = true; // orderByIdDesc 라는 변수를 선언하고 true로 놓기
         // params가 orderBy 키를 포함하고, 그 orderBy 키 값이 idAsc이면 if문 실행
         // orderBy 키 값이 idAsc라고 걸어놨는데, 만약 고객이 usr/article/list 까지만 쓰면, orderBy 값이 null이 되므로 오류 남
         // 따라서, 앞에 orderBy 키를 포함한다는 전제를 깔아줘야함
@@ -64,12 +63,11 @@ public class Main {
           orderByIdDesc = false; // 만약, 키 값이 idAsc가 된다면 반대가 되므로 orderByIdDesc를 false로 놔줌
         }
 
-        if(orderByIdDesc) { // orderByIdDesc가 true라고 되어있는데 맞으면, 이는 역순으로 되어있으므로 뒤집어라 라는 뜻 (정순으로 보여줘라)
-          sortedArticles = Util.reverseList(sortedArticles); // 원본을 복사해서 그 복사본을 뒤집어라 -> 오름차순을 내림차순으로 뒤집어라
+        if(orderByIdDesc) { // orderByIdDesc가 참이면
+          sortedArticles = Util.reverseList(sortedArticles); // articles의 복사본을 뒤집어라(즉, 오름차순되어있는걸 내림차순으로)
         }
 
-
-          for(Article article : sortedArticles) {
+          for(Article article : sortedArticles) { // 뒤집은 다음 순차적으로 보여줘라
             System.out.println(article.id + " / " + article.title);
           }
 
