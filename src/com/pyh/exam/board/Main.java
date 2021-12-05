@@ -13,8 +13,7 @@ public class Main {
 
 
   public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-
+    Scanner sc = Container.sc; // Container에서 따로 Scanner를 만들었기 때문에 여기서 Scanner를 만들 필요 없고 호출만 해주면 됨
 
     System.out.println("== 게시판 v 0.1 ==");
     System.out.println("== 프로그램 시작 ==");
@@ -47,7 +46,7 @@ public class Main {
         actionUsrArticleDetail(rq);
       }
       else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
-        actionUsrArticleWrite(rq, sc);
+        actionUsrArticleWrite(rq);
       }
       else {
         System.out.println("입력된 명령어 : " + cmd);
@@ -69,12 +68,12 @@ public class Main {
 
   }
 
-  private static void actionUsrArticleWrite(Rq rq, Scanner sc) {
+  private static void actionUsrArticleWrite(Rq rq) {
     System.out.println("- 게시물 등록 -");
     System.out.printf("제목 : ");
-    String title = sc.nextLine();
+    String title = Container.sc.nextLine();
     System.out.printf("내용 : ");
-    String body = sc.nextLine();
+    String body = Container.sc.nextLine();
 
     int id = articlesLastId + 1;
     articlesLastId = id;
@@ -154,6 +153,8 @@ public class Main {
     }
     // 검색끝
 
+
+    // 정렬 순서 구현
     List<Article> sortedArticles = filteredArticles; // 원래 articles 안에는 오름차순된 게시물들이 존재
 
 
@@ -176,13 +177,3 @@ public class Main {
   }
 }
 
-
-
-
-
-
-
-
-
-
-// 수정불가능
