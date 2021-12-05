@@ -3,15 +3,14 @@ package com.pyh.exam.board;
 import java.util.*;
 
 public class Main {
+  /* articles와 articlesLastId는 Main 안에서 만들어져서 List, Detail, Write이 얘네를 쓸때마다 넘겨받아야 했는데(괄호 안에 쓰는 것처럼)
+  articles와 articlesLastId를 Main, List, Detail, Write 모두가 다 속한 Main위의 class에다가 static 변수로 만들어놓음으로써
+  articles와 articlesLastId가 모두 싹 다 접근 가능할 수 있도록함 -> 넘겨받았던거 싹 다 지워도 됨. 바로바로 접근 가능하니깐 */
 
-  static void makeTestData(List<Article> articles) { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
-    // for문으로 테스트 게시물 100개 만들기
-    for(int i = 0; i < 100; i++) {
-      int id = i + 1;
-      articles.add(new Article(id, "제목" + id, "내용" + id));
-    }
+  static List<Article> articles = new ArrayList<>(); // 얘네 둘은 static 안에 있던 변수이므로 여기에도 static 붙여줌
+  static int articlesLastId = 0;
 
-  }
+
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
@@ -20,10 +19,8 @@ public class Main {
     System.out.println("== 게시판 v 0.1 ==");
     System.out.println("== 프로그램 시작 ==");
 
-    int articlesLastId = 0;  // article의 마지막 게시물 번호라는 의미의 변수임. 맨 처음에는 아직 게시물이 없을 때이므로 게시물 번호를 0으로 초기화
-    List<Article> articles = new ArrayList<>();
 
-    makeTestData(articles);
+    makeTestData();
 
     if(articles.size() > 0) {
       articlesLastId = articles.get(articles.size() - 1).id;
@@ -44,14 +41,13 @@ public class Main {
         break;  // 반복문을 아예 빠져나가게 함. if문을 넘어 while문 까지 아예 벗어나게 함
       }
       else if(rq.getUrlPath().equals("/usr/article/list")) {
-        actionUsrArticleList(rq, articles);
+        actionUsrArticleList(rq);
       }
       else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
-        actionUsrArticleDetail(rq, articles);
+        actionUsrArticleDetail(rq);
       }
       else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
-        actionUsrArticleWrite(rq, sc, articles, articlesLastId);
-        articlesLastId++;
+        actionUsrArticleWrite(rq, sc);
 
       }
 
@@ -67,7 +63,16 @@ public class Main {
     sc.close();
   }
 
-  private static void actionUsrArticleWrite(Rq rq, Scanner sc, List<Article> articles, int articlesLastId) {
+  static void makeTestData() { // "게시물_관련_테스트_데이터_생성()"은 static 안에 있는데 이 메소드는 static 바깥이므로 앞에 static 붙여줌
+    // for문으로 테스트 게시물 100개 만들기
+    for(int i = 0; i < 100; i++) {
+      int id = i + 1;
+      articles.add(new Article(id, "제목" + id, "내용" + id));
+    }
+
+  }
+
+  private static void actionUsrArticleWrite(Rq rq, Scanner sc) {
     System.out.println("- 게시물 등록 -");
     System.out.printf("제목 : ");
     String title = sc.nextLine();
@@ -75,6 +80,7 @@ public class Main {
     String body = sc.nextLine();
 
     int id = articlesLastId + 1;
+    articlesLastId = id;
 
     // Article은 새로 지은 변수 타입이라고 생각하면 됨. int i 이런거에서 int와 같음. 변수는 article이고!
     // Article이라는 객체를 생성했으므로 이제 저거는 변수 타입을 Article 이라고 쓸 수 있는것
@@ -90,7 +96,7 @@ public class Main {
     System.out.println(article.id + "번 게시물이 등록되었습니다.");
   }
 
-  private static void actionUsrArticleDetail(Rq rq, List<Article> articles) {
+  private static void actionUsrArticleDetail(Rq rq) {
     Map<String, String> params = rq.getParams();
 
     if(params.containsKey("id") == false) { // containsKey() : params 로 들어온 명령어 인자에 id가 있냐?라고 확인하는 함수
@@ -127,7 +133,7 @@ public class Main {
     System.out.println("내용 : "+ article.body);
   }
 
-  private static void actionUsrArticleList(Rq rq, List<Article> articles) {
+  private static void actionUsrArticleList(Rq rq) {
     System.out.println("- 게시물 리스트 -");
     System.out.println("--------------------");
     System.out.println("번호 / 제목");
