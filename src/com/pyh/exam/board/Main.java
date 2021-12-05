@@ -7,8 +7,13 @@ public class Main {
   articles와 articlesLastId를 Main, List, Detail, Write 모두가 다 속한 Main위의 class에다가 static 변수로 만들어놓음으로써
   articles와 articlesLastId가 모두 싹 다 접근 가능할 수 있도록함 -> 넘겨받았던거 싹 다 지워도 됨. 바로바로 접근 가능하니깐 */
 
-  static List<Article> articles = new ArrayList<>(); // 얘네 둘은 static 안에 있던 변수이므로 여기에도 static 붙여줌
-  static int articlesLastId = 0;
+  static List<Article> articles; // 얘네 둘은 static 안에 있던 변수이므로 여기에도 static 붙여줌
+  static int articlesLastId ;
+
+  static { // static 전용 초기화 블록으로 만들어줌. Main의 생성자 부분을 그냥 static으로 바꿔준거라고 보면 됨
+    articles = new ArrayList<>();
+    articlesLastId = 0;
+  }
 
 
 
