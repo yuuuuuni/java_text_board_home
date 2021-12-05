@@ -50,8 +50,25 @@ public class Main {
         System.out.println("번호 / 제목");
         System.out.println("--------------------");
 
+        // 검색시작
+        List<Article> filteredArticles = articles;
 
-        List<Article> sortedArticles = articles; // 원래 articles 안에는 오름차순된 게시물들이 존재
+
+        if(params.containsKey("searchKeyword")) {
+          String searchKeyword = params.get("searchKeyword"); // 고객이 "searchKeyword=??"에서 ??으로 친 값을 searchKeyword에 넣어라
+
+          filteredArticles = new ArrayList<>();
+
+          for(Article article : articles) {
+            boolean matched = article.title.contains(searchKeyword) || article.body.contains(searchKeyword);
+            if(matched) { // matched가 맞으면
+              filteredArticles.add(article);
+            }
+          }
+        }
+        // 검색끝
+
+        List<Article> sortedArticles = filteredArticles; // 원래 articles 안에는 오름차순된 게시물들이 존재
 
 
         boolean orderByIdDesc = true; // orderByIdDesc 라는 변수를 선언하고 true로 놓기
