@@ -46,42 +46,9 @@ public class Main {
       else if(rq.getUrlPath().equals("/usr/article/list")) {
         actionUsrArticleList(rq, articles);
       }
-        else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
-         if(params.containsKey("id") == false) { // containsKey() : params로 들어온 명령어 인자에 id가 있냐?라고 확인하는 함수
-            System.out.println("id를 입력해주세요.");
-            continue; // while문의 첫번째로 다시 올라감
-          }
-
-         int id = 0; // id를 try안에서 만들면 밑에서 id를 쓸 수 없으므로 바깥으로 빼줌
-
-        // try-catch문 사용하면 try안에 감싸진 곳에서 프로그램 오류가 나도 뻗지 않음.
-        // try 안에 감싸진 실행문이 오류가 나지 않으면 catch 실행 되지 않고 그냥 넘어감
-        // try 안에 감싸진 실행문이 오류 날 경우, catch 안에 감싸진 실행문이 실행되고 넘어감
-         try {
-           // ex) 고객이 id=5라고 침, int id = 5가 됨
-           id = Integer.parseInt(params.get("id")); // params의 id 키를 꺼내면 값이 나오는데 그것이 String이므로 정수화 시킴
-         }
-        catch (NumberFormatException e) {
-          System.out.println("id를 정수로 입력해주세요.");
-          continue;
-        }
-
-        if(id > articles.size()) {
-          System.out.println("게시물이 존재하지 않습니다.");
-          continue; // while문의 첫번째로 다시 올라감
-        }
-        
-        // params의 번호와 articles의 번호를 비교하는거 없이 한번에 id값을 넣어서 처리
-        // 5-1은 4, get(4)는 articles의 번호 5에 해당되므로 5번 게시물이 나옴
-        Article article = articles.get(id - 1); // articles가 0번째 인덱스에서 시작하므로 id값에서 하나 빼야함
-
-        System.out.println("- 게시물 상세내용 -");
-        System.out.println("번호 : "+ article.id);
-        System.out.println("제목 : "+ article.title);
-        System.out.println("내용 : "+ article.body);
-
+      else if(rq.getUrlPath().equals("/usr/article/detail")) {  // 게시물 상세보기
+        actionUsrArticleDetail(rq, articles);
       }
-
       else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
         System.out.println("- 게시물 등록 -");
         System.out.printf("제목 : ");
@@ -118,6 +85,43 @@ public class Main {
     System.out.println("== 프로그램 종료 ==");
 
     sc.close();
+  }
+
+  private static void actionUsrArticleDetail(Rq rq, List<Article> articles) {
+    Map<String, String> params = rq.getParams();
+
+    if(params.containsKey("id") == false) { // containsKey() : params 로 들어온 명령어 인자에 id가 있냐?라고 확인하는 함수
+      System.out.println("id를 입력해주세요.");
+      return; // 원래는 continue 였지만(반복문의 처음으로 올라가는 것) 이제는 반복문 안에 있는게 아니므로 return해줘야함
+    }
+
+    int id = 0; // id를 try 안에서 만들면 밑에서 id를 쓸 수 없으므로 바깥으로 빼줌
+
+    // try-catch 문 사용하면 try 안에 감싸진 곳에서 프로그램 오류가 나도 뻗지 않음.
+    // try 안에 감싸진 실행문이 오류가 나지 않으면 catch 실행 되지 않고 그냥 넘어감
+    // try 안에 감싸진 실행문이 오류 날 경우, catch 안에 감싸진 실행문이 실행되고 넘어감
+    try {
+      // ex) 고객이 id=5라고 침, int id = 5가 됨
+      id = Integer.parseInt(params.get("id")); // params 의 id 키를 꺼내면 값이 나오는데 그것이 String이므로 정수화 시킴
+    }
+    catch (NumberFormatException e) {
+      System.out.println("id를 정수로 입력해주세요.");
+      return;
+    }
+
+    if(id > articles.size()) {
+      System.out.println("게시물이 존재하지 않습니다.");
+      return; // while 문의 첫번째로 다시 올라감
+    }
+
+    // params의 번호와 articles의 번호를 비교하는거 없이 한번에 id값을 넣어서 처리
+    // 5-1은 4, get(4)는 articles의 번호 5에 해당되므로 5번 게시물이 나옴
+    Article article = articles.get(id - 1); // articles가 0번째 인덱스에서 시작하므로 id값에서 하나 빼야함
+
+    System.out.println("- 게시물 상세내용 -");
+    System.out.println("번호 : "+ article.id);
+    System.out.println("제목 : "+ article.title);
+    System.out.println("내용 : "+ article.body);
   }
 
   private static void actionUsrArticleList(Rq rq, List<Article> articles) {
