@@ -50,28 +50,8 @@ public class Main {
         actionUsrArticleDetail(rq, articles);
       }
       else if (rq.getUrlPath().equals("/usr/article/write")) {  // 게시물 등록
-        System.out.println("- 게시물 등록 -");
-        System.out.printf("제목 : ");
-        String title = sc.nextLine();
-        System.out.printf("내용 : ");
-        String body = sc.nextLine();
-
-        int id = articlesLastId + 1;
+        actionUsrArticleWrite(rq, sc, articles, articlesLastId);
         articlesLastId++;
-
-        // Article은 새로 지은 변수 타입이라고 생각하면 됨. int i 이런거에서 int와 같음. 변수는 article이고!
-        // Article이라는 객체를 생성했으므로 이제 저거는 변수 타입을 Article 이라고 쓸 수 있는것
-        // article 요 변수는 else if 이 괄호 안에서 밖에 못씀 괄호 밖으로 나가면 못씀 죽음...
-        Article article = new Article(id, title, body);   // Article 객체 생성  // new Article에 들어온 값들은 스캐너로 입력 받은 값들 + 알아서 증가한 번호 변수
-        // 게시물 객체가 생성되는 코드임. 즉, 게시물 생성
-
-
-        articles.add(article);
-
-        System.out.println("생성된 게시물 객체 : " + article);
-
-        System.out.println(article.id + "번 게시물이 등록되었습니다.");
-
 
       }
 
@@ -85,6 +65,29 @@ public class Main {
     System.out.println("== 프로그램 종료 ==");
 
     sc.close();
+  }
+
+  private static void actionUsrArticleWrite(Rq rq, Scanner sc, List<Article> articles, int articlesLastId) {
+    System.out.println("- 게시물 등록 -");
+    System.out.printf("제목 : ");
+    String title = sc.nextLine();
+    System.out.printf("내용 : ");
+    String body = sc.nextLine();
+
+    int id = articlesLastId + 1;
+
+    // Article은 새로 지은 변수 타입이라고 생각하면 됨. int i 이런거에서 int와 같음. 변수는 article이고!
+    // Article이라는 객체를 생성했으므로 이제 저거는 변수 타입을 Article 이라고 쓸 수 있는것
+    // article 요 변수는 else if 이 괄호 안에서 밖에 못씀 괄호 밖으로 나가면 못씀 죽음...
+    Article article = new Article(id, title, body);   // Article 객체 생성  // new Article에 들어온 값들은 스캐너로 입력 받은 값들 + 알아서 증가한 번호 변수
+    // 게시물 객체가 생성되는 코드임. 즉, 게시물 생성
+
+
+    articles.add(article);
+
+    System.out.println("생성된 게시물 객체 : " + article);
+
+    System.out.println(article.id + "번 게시물이 등록되었습니다.");
   }
 
   private static void actionUsrArticleDetail(Rq rq, List<Article> articles) {
